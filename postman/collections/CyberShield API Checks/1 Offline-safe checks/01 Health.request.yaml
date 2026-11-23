@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{baseUrl}}/api/health"
+method: GET
+headers:
+  X-Client-Id: "{{clientId}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status is 200", () => pm.response.to.have.status(200));
+      pm.test("Backend is online", () => pm.expect(pm.response.json().status).to.eql("online"));
+      pm.test("Dataset loaded", () => pm.expect(pm.response.json().phishingDataset.loaded).to.eql(true));
+    language: text/javascript
+order: 1000

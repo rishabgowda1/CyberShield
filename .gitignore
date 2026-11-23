@@ -1,0 +1,5 @@
+node_modules/
+server/data/history.json
+server/data/history.json.tmp
+*.log
+.postman/

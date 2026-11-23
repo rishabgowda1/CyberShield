@@ -1,0 +1,19 @@
+$kind: http-request
+url: "{{baseUrl}}/api/phishing"
+method: POST
+headers:
+  X-Client-Id: "{{clientId}}"
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "url": "https://example.com"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status is 200", () => pm.response.to.have.status(200));
+      pm.test("Verdict is no_match", () => pm.expect(pm.response.json().verdict).to.eql("no_match"));
+    language: text/javascript
+order: 7000

@@ -1,0 +1,16 @@
+$kind: http-request
+url: "{{baseUrl}}/api/history"
+method: GET
+headers:
+  X-Client-Id: "{{clientId}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status is 200", () => pm.response.to.have.status(200));
+      pm.test("Has 3 phishing entries, newest first", () => {
+        const e = pm.response.json().entries;
+        pm.expect(e.length).to.be.at.least(3);
+        pm.expect(e[0].type).to.eql("phishing");
+      });
+    language: text/javascript
+order: 9000

@@ -1,0 +1,21 @@
+$kind: http-request
+name: 03 Scan file:// is rejected
+url: "{{baseUrl}}/api/scan"
+method: POST
+headers:
+  X-Client-Id: "{{clientId}}"
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "url": "file:///etc/passwd"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status is 400", () => pm.response.to.have.status(400));
+      pm.test("success is false", () => pm.expect(pm.response.json().success).to.eql(false));
+      pm.test("Error code is INVALID_URL", () => pm.expect(pm.response.json().error.code).to.eql("INVALID_URL"));
+    language: text/javascript
+order: 3000

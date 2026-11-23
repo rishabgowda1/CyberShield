@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{baseUrl}}/api/phishing"
+method: POST
+headers:
+  X-Client-Id: "{{clientId}}"
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "url": "http://192.168.4.4/paypal-secure-login/verify-account"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status is 200", () => pm.response.to.have.status(200));
+      pm.test("Verdict is suspicious", () => pm.expect(pm.response.json().verdict).to.eql("suspicious"));
+      pm.test("Raw IP indicator found", () => pm.expect(pm.response.json().indicators.map(i => i.id)).to.include("ip-host"));
+    language: text/javascript
+order: 8000

@@ -1,0 +1,26 @@
+$kind: http-request
+url: "{{baseUrl}}/api/scan"
+method: POST
+headers:
+  X-Client-Id: "{{clientId}}"
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "url": "example.com"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status is 200", () => pm.response.to.have.status(200));
+      const r = pm.response.json();
+      pm.test("Score is 0-100", () => pm.expect(r.score).to.be.within(0, 100));
+      pm.test("Status is safe/warning/danger", () => pm.expect(["safe","warning","danger"]).to.include(r.status));
+      pm.test("Lists are arrays", () => {
+        pm.expect(r.findings).to.be.an("array");
+        pm.expect(r.recommendations).to.be.an("array");
+        pm.expect(r.security.headers).to.be.an("array");
+      });
+    language: text/javascript
+order: 1000

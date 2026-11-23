@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{baseUrl}}/api/phishing"
+method: POST
+headers:
+  X-Client-Id: "{{clientId}}"
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "url": "http://secure-login-examplebank.example/verify"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status is 200", () => pm.response.to.have.status(200));
+      pm.test("Verdict is listed", () => pm.expect(pm.response.json().verdict).to.eql("listed"));
+      pm.test("Safety score is very low", () => pm.expect(pm.response.json().safetyScore).to.be.below(10));
+    language: text/javascript
+order: 6000

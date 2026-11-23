@@ -1,0 +1,24 @@
+{
+  "name": "cybershield",
+  "version": "2.0.0",
+  "description": "CyberShield – website security dashboard, scanner, phishing checker and security toolkit (Node.js/Express + vanilla JS)",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node --watch server/server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18.17"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "tldts": "^7.0.0"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0"
+  }
+}

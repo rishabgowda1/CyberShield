@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CyberShield – Security Center</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" aria-label="Main navigation">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">&#128737;</span><span>CyberShield</span></div>
+      <nav id="nav">
+        <button type="button" class="nav-item" data-section="dashboard">Dashboard</button>
+        <button type="button" class="nav-item" data-section="scanner">Website Scanner</button>
+        <button type="button" class="nav-item" data-section="password">Password Security</button>
+        <button type="button" class="nav-item" data-section="phishing">Phishing Checker</button>
+        <button type="button" class="nav-item" data-section="history">Scan History</button>
+        <button type="button" class="nav-item" data-section="recommendations">Recommendations</button>
+      </nav>
+      <div class="sidebar-foot">
+        <span id="backend-status" class="pill pill-wait">Checking server…</span>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <h1 id="page-title">Dashboard</h1>
+        <label class="profile" title="Display name (stored in this browser only)">
+          <span id="profile-avatar" class="avatar" aria-hidden="true">?</span>
+          <input id="profile-name" type="text" maxlength="30" placeholder="Your name" aria-label="Display name">
+        </label>
+      </header>
+
+      <!-- ============ DASHBOARD ============ -->
+      <section id="section-dashboard" class="section" hidden>
+        <div class="grid stats">
+          <div class="card stat"><span class="label">Latest security score</span><strong id="stat-score">–</strong></div>
+          <div class="card stat"><span class="label">Total scans</span><strong id="stat-total">0</strong></div>
+          <div class="card stat"><span class="label">Warnings</span><strong id="stat-warnings">0</strong></div>
+          <div class="card stat"><span class="label">Dangerous sites</span><strong id="stat-danger">0</strong></div>
+        </div>
+
+        <div class="grid two">
+          <div class="card">
+            <h2>Score history</h2>
+            <div id="score-chart" class="chart" role="img" aria-label="Line chart of recent security scores"></div>
+          </div>
+          <div class="card">
+            <h2>Security toolkit</h2>
+            <div class="actions">
+              <button type="button" class="btn" data-goto="scanner">Scan a website</button>
+              <button type="button" class="btn" data-goto="password">Check / generate a password</button>
+              <button type="button" class="btn" data-goto="phishing">Check a URL for phishing</button>
+              <button type="button" class="btn btn-ghost" data-goto="recommendations">View recommendations</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" id="network-card">
+          <div class="card-head">
+            <h2>Network identity</h2>
+            <button type="button" id="net-refresh" class="btn btn-small">Refresh</button>
+          </div>
+          <div class="grid three net-summary">
+            <div><span class="label">Public IP</span><strong id="net-sum-ip">Loading…</strong></div>
+            <div><span class="label">ISP / ASN</span><strong id="net-sum-isp">Loading…</strong></div>
+            <div><span class="label">Location</span><strong id="net-sum-loc">Loading…</strong></div>
+          </div>
+          <p id="net-status" class="muted small" aria-live="polite"></p>
+          <h3>IP &amp; network details</h3>
+          <dl class="kv" id="net-details">
+            <div><dt>Public IP</dt><dd id="net-public-ip">–</dd></div>
+            <div><dt>Client IP seen by server</dt><dd id="net-client-ip">–</dd></div>
+            <div><dt>IP version</dt><dd id="net-version">–</dd></div>
+            <div><dt>ISP</dt><dd id="net-isp">–</dd></div>
+            <div><dt>Organization</dt><dd id="net-org">–</dd></div>
+            <div><dt>ASN</dt><dd id="net-asn">–</dd></div>
+            <div><dt>Country</dt><dd id="net-country">–</dd></div>
+            <div><dt>Region</dt><dd id="net-region">–</dd></div>
+            <div><dt>City</dt><dd id="net-city">–</dd></div>
+            <div><dt>Timezone</dt><dd id="net-timezone">–</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <!-- ============ SCANNER ============ -->
+      <section id="section-scanner" class="section" hidden>
+        <div class="card">
+          <h2>Website security scanner</h2>
+          <p class="muted">Enter a domain or URL. HTTPS is assumed if you leave the protocol out.</p>
+          <div class="row">
+            <input id="scan-input" type="text" placeholder="example.com" autocomplete="off" spellcheck="false" aria-label="Website URL or domain">
+            <button type="button" id="scan-btn" class="btn">Scan</button>
+          </div>
+          <p id="scan-status" class="muted small" aria-live="polite"></p>
+        </div>
+        <div id="scan-result" hidden></div>
+      </section>
+
+      <!-- ============ PASSWORD ============ -->
+      <section id="section-password" class="section" hidden>
+        <div class="grid two">
+          <div class="card">
+            <h2>Password strength checker</h2>
+            <div class="row">
+              <input id="pw-input" type="password" placeholder="Type a password to test" autocomplete="off" spellcheck="false" aria-label="Password to test">
+              <button type="button" id="pw-toggle" class="btn btn-ghost">Show</button>
+            </div>
+            <div class="meter"><div id="pw-meter-bar" class="meter-bar"></div></div>
+            <p><strong id="pw-label">Enter a password</strong> <span id="pw-entropy" class="muted small"></span></p>
+            <ul id="pw-feedback" class="bullets"></ul>
+            <p class="muted small">Checked entirely in your browser. The password is never sent to the server or saved.</p>
+          </div>
+          <div class="card">
+            <h2>Password generator</h2>
+            <label class="small" for="gen-length">Length: <strong id="gen-length-val">16</strong></label>
+            <input id="gen-length" type="range" min="8" max="64" value="16">
+            <div class="checks">
+              <label><input type="checkbox" id="gen-lower" checked> a–z</label>
+              <label><input type="checkbox" id="gen-upper" checked> A–Z</label>
+              <label><input type="checkbox" id="gen-digits" checked> 0–9</label>
+              <label><input type="checkbox" id="gen-symbols" checked> !@#$</label>
+            </div>
+            <div class="row">
+              <input id="gen-output" type="text" readonly aria-label="Generated password">
+              <button type="button" id="gen-btn" class="btn">Generate</button>
+              <button type="button" id="gen-copy" class="btn btn-ghost">Copy</button>
+            </div>
+            <p id="gen-status" class="muted small" aria-live="polite"></p>
+            <p class="muted small">Uses the browser's cryptographic random number generator. Educational aid – use a password manager for real accounts.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ PHISHING ============ -->
+      <section id="section-phishing" class="section" hidden>
+        <div class="card">
+          <h2>Phishing URL checker</h2>
+          <p class="muted">Compares the URL with a local malicious-URL dataset and looks for suspicious patterns. Nothing is visited.</p>
+          <div class="row">
+            <input id="phish-input" type="text" placeholder="http://example.com/login" autocomplete="off" spellcheck="false" aria-label="URL to check">
+            <button type="button" id="phish-btn" class="btn">Check URL</button>
+          </div>
+          <p id="phish-status" class="muted small" aria-live="polite"></p>
+        </div>
+        <div id="phish-result" hidden></div>
+      </section>
+
+      <!-- ============ HISTORY ============ -->
+      <section id="section-history" class="section" hidden>
+        <div class="card">
+          <div class="card-head">
+            <h2>Scan history</h2>
+            <button type="button" id="history-clear" class="btn btn-small btn-ghost">Clear history</button>
+          </div>
+          <p id="history-empty" class="muted" hidden>No checks yet. Run a website scan or phishing check and it will appear here.</p>
+          <div class="table-wrap">
+            <table id="history-table">
+              <thead><tr><th>When</th><th>Type</th><th>Target</th><th>Score</th><th>Status</th></tr></thead>
+              <tbody id="history-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ RECOMMENDATIONS ============ -->
+      <section id="section-recommendations" class="section" hidden>
+        <div class="card">
+          <h2>Security recommendations</h2>
+          <p id="reco-source" class="muted"></p>
+          <ol id="reco-list" class="bullets"></ol>
+        </div>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

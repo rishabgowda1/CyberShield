@@ -1,0 +1,5 @@
+$kind: collection
+description: "Start the server first (npm start). Run the collection with the Runner: folder 1 works offline; folder 2 needs internet."
+variables:
+  baseUrl: http://localhost:3000
+  clientId: postman-test-0001

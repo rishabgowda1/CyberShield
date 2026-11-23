@@ -1,0 +1,12 @@
+$kind: http-request
+url: "{{baseUrl}}/api/history"
+method: DELETE
+headers:
+  X-Client-Id: "{{clientId}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status is 200", () => pm.response.to.have.status(200));
+      pm.test("List is empty", () => pm.expect(pm.response.json().entries).to.eql([]));
+    language: text/javascript
+order: 10000

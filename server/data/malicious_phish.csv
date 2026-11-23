@@ -1,0 +1,7 @@
+url,type
+secure-login-examplebank.example/verify,phishing
+paypa1-account-update.example/signin,phishing
+free-download-codec.example/setup.exe,malware
+defaced-site.example/index.html,defacement
+example.com,benign
+www.wikipedia.org/wiki/Computer_security,benign
